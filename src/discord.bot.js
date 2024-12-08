@@ -2,7 +2,6 @@ import { sendLongMessage, transformArrayToObject, formatPlayerDataForDiscord, se
 import { Client, Intents } from 'discord.js';
 import { config } from './config.js';
 import { PlayerData } from './playerData.js';
-import bent from 'bent';
 
 const { token, prefix } = config;
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -73,7 +72,6 @@ async function getPlayerData(player, extra) {
 }
 
 async function getFullPlayerData(playerName) {
-    const getJSON = bent('json');
     const QUERY = {
         table: 'ScoreboardPlayers,Players',
         fields: [
@@ -101,9 +99,9 @@ async function getFullPlayerData(playerName) {
     url += `&limit=${QUERY.limit}&format=json`;
     url = url.split(' ').join('+');
 
-    try {
-        return await getJSON(url);
-    } catch (error) {
-        throw new Error(`Error fetching data: ${error.message}`);
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Error fetching data: HTTP ${response.status}`);
     }
+    return response.json();
 }

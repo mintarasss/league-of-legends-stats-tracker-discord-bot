@@ -4,7 +4,6 @@
     "start": "node src/discord.bot.js"
   },
   "dependencies": {
-    "bent": "^7.3.12",
     "canvas": "^2.9.1",
     "discord.js": "^13.6.0"
   }
